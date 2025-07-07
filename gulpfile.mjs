@@ -1,5 +1,5 @@
 // Получение __dirname в gulpfile.mjs
-import { fileURLToPath } from 'url';
+import {fileURLToPath} from 'url';
 import path from 'path';                                // утилиты для работы с путями
 
 const __filename = fileURLToPath(import.meta.url);
@@ -8,7 +8,7 @@ const __dirname = path.dirname(__filename);
 // Подключение методов из Gulp
 import gulp from "gulp";
 
-const { src, dest, watch, parallel, series } = gulp;
+const {src, dest, watch, parallel, series} = gulp;
 
 
 // ————————————————————————————————————————————
@@ -48,7 +48,7 @@ const browserSync = browserSyncPkg.create();      // запускает лока
 // ————————————————————————————————————————————
 
 import fs from "fs";                                  // работа с файловой системой (проверка существования)
-import { deleteAsync } from "del";                    // удаление файлов/папок
+import {deleteAsync} from "del";                    // удаление файлов/папок
 
 
 // ————————————————————————————————————————————
@@ -88,12 +88,12 @@ const paths = {
     dest: 'app/css'													 // выходная папка CSS
   },
   scripts: {
-    src: [ 'node_modules/jquery/dist/jquery.js', 'node_modules/jquery-ui/dist/jquery-ui.js', 'node_modules/swiper/swiper-bundle.js', 'app/js/**/*.js', '!app/js/main.min.js'											 // исключаем уже скомпилированный
+    src: ['node_modules/jquery/dist/jquery.js', 'node_modules/jquery-ui/dist/jquery-ui.js', 'node_modules/swiper/swiper-bundle.js', 'app/js/**/*.js', '!app/js/main.min.js'											 // исключаем уже скомпилированный
     ], dest: 'app/js',													 // куда сбрасывать JS
     outputFile: 'main.min.js'										 // имя итогового файла
   },
   images: {
-    src: [ 'app/images/src/**/*.*', '!app/images/src/**/*.svg' ],		// растровые
+    src: ['app/images/src/**/*.*', '!app/images/src/**/*.svg'],		// растровые
     svg: 'app/images/src/**/*.svg',									// svg для чистки
     dest: 'app/images',												// выходная папка изображений
   },
@@ -106,13 +106,13 @@ const paths = {
     dest: 'dist/upload'
   },
   build: [															// какие файлы копировать в папку dist для финального билда
-    'app/css/**/*.css', 'app/images/*.*', '!app/images/**/*.html', 'app/js/main.min.js', 'app/*.html', 'app/upload/**/*', 'app/web.config', 'app/favicon.png', ],
+    'app/css/**/*.css', 'app/images/*.*', '!app/images/**/*.html', 'app/js/main.min.js', 'app/*.html', 'app/upload/**/*', 'app/web.config', 'app/favicon.png',],
   dist: 'dist',														// папка финального билда
   watch: {															// за чем следить для live-reload
     styles: 'app/scss/**/*.scss',
     images: 'app/images/src/**/*.*',
-    scripts: [ 'app/js/**/*.js', '!app/js/**/*.min.js' ],
-    html: [ 'app/components/**/*.html', 'app/pages/*.html' ],
+    scripts: ['app/js/**/*.js', '!app/js/**/*.min.js'],
+    html: ['app/components/**/*.html', 'app/pages/*.html'],
     pages: 'app/*.html',
     resources: 'app/upload/**/*'
   }
@@ -131,10 +131,10 @@ function resources() {
 // 2. Обработка HTML-страниц: include-компоненты + типографика
 function pages() {
   return src(paths.html.pages)
-      .pipe(include({ includePaths: paths.html.components }))
-      .pipe(typograf({ locale: [ 'ru', 'en-US' ], safeTags: [ [ '<no-typography>', '</no-typography>' ] ] }))
+      .pipe(include({includePaths: paths.html.components}))
+      .pipe(typograf({locale: ['ru', 'en-US'], safeTags: [['<no-typography>', '</no-typography>']]}))
       .pipe(dest(paths.html.dest))
-      .pipe(browserSync.reload({ stream: true }))		  // обновляем браузер
+      .pipe(browserSync.reload({stream: true}))		  // обновляем браузер
 }
 
 
@@ -143,9 +143,9 @@ function images() {
   const destPath = paths.images.dest;
 
   // AVIF
-  const avifStream = src(paths.images.src, { base: 'app/images/src' })
+  const avifStream = src(paths.images.src, {base: 'app/images/src'})
       .pipe(newer(destPath))                    // только новые файлы
-      .pipe(avif({ quality: 90 }))        // качество 90/100
+      .pipe(avif({quality: 90}))        // качество 90/100
       .pipe(dest(destPath));
 
   // WebP
@@ -164,7 +164,7 @@ function images() {
   //     .pipe(dest(destPath));
 
   // Чистая оптимизация SVG
-  const svgStream = src(paths.images.svg, { base: 'app/images/src' })
+  const svgStream = src(paths.images.svg, {base: 'app/images/src'})
       .pipe(newer(destPath))
       .pipe(svgmin())    // минимизация SVG
       .pipe(dest(destPath));
@@ -174,12 +174,12 @@ function images() {
       .pipe(browserSync.stream());
 
   /*
-	  Если нет необходимости придерживаться модульности (Разбивать картинки по папкам - секциями)
+      Если нет необходимости придерживаться модульности (Разбивать картинки по папкам - секциями)
   */
 
   // return src(['app/images/src/*.*', '!app/images/src/*.svg'])
   //     .pipe(newer('app/images/'))
-  //     .pipe(avif({ quality: 90 }))
+  //     .pipe(avif({quality: 90}))
   //
   //     .pipe(src('app/images/src/*.*'))
   //     .pipe(newer('app/images/'))
@@ -212,13 +212,13 @@ function sprite() {
 // 5. Сборка и минификация JS: сторонние библиотеки + свой код
 function scripts() {
   return src(paths.scripts.src)
-      .pipe(plumber({ errorHandler: gulpNotify.onError('JS Error: <%= error.message %>') }))    // не ломать поток
+      .pipe(plumber({errorHandler: gulpNotify.onError('JS Error: <%= error.message %>')}))    // не ломать поток
       .pipe(concat(paths.scripts.outputFile))                // объединить воедино
       .pipe(uglifyJs({								// минифицировать (без mangle)
         compress: true, mangle: false
       }))
       .pipe(dest(paths.scripts.dest))
-      .pipe(browserSync.reload({ stream: true }))		// перезагрузить браузер
+      .pipe(browserSync.reload({stream: true}))		// перезагрузить браузер
 }
 
 
@@ -231,9 +231,9 @@ function styles() {
         })
       }))
       .pipe(sourcemaps.init())
-      .pipe(sassCompiler({ outputStyle: 'compressed' }).on('error', sassCompiler.logError))      // сжатый CSS
+      .pipe(sassCompiler({outputStyle: 'compressed'}).on('error', sassCompiler.logError))      // сжатый CSS
       .pipe(autoprefixer({
-        overrideBrowserslist: [ 'last 10 version' ]
+        overrideBrowserslist: ['last 10 version']
       }))
       .pipe(concat('style.min.css'))                    // итоговый файл стилей
       .pipe(sourcemaps.write('.'))                  // записать карты
@@ -247,7 +247,7 @@ function styles() {
 // 7. Очистка папки dist перед билдом
 async function cleanDist() {
   // полностью очищаем папку dist, но не удаляем саму папку
-  await deleteAsync([ `${ paths.dist }/**`, `!${ paths.dist }` ]);
+  await deleteAsync([`${paths.dist}/**`, `!${paths.dist}`]);
 }
 
 
@@ -278,13 +278,13 @@ function watching() {
 
 // 9. КОПИРОВАНИЕ В dist ДЛЯ БИЛДА
 function building() {
-  return src(paths.build, { base: 'app' })
+  return src(paths.build, {base: 'app'})
       .pipe(dest(paths.dist))
 }
 
 
 // Экспортируем публичные задачи
-export { styles, images, pages, sprite, scripts, resources, cleanDist }
+export {styles, images, pages, sprite, scripts, resources, cleanDist}
 
 // Команда `gulp build` для production
 export const build = series(cleanDist, parallel(styles, images, scripts, pages, sprite, resources), building);
