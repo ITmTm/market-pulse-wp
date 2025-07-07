@@ -84,7 +84,7 @@ function unbindMobile() {
 }
 
 // ---- breakpoint через matchMedia ----------------------------------------
-const mq = window.matchMedia(`(max-width: ${ BREAKPOINT - 1 }px)`);
+const mq = window.matchMedia(`(max-width: ${BREAKPOINT - 1}px)`);
 
 /** Вызывается при изменении ширины */
 function handleBreakpoint(e) {
